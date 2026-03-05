@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lisans Paneli</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #12121a;
+    --border: #1e1e2e;
+    --accent: #7c3aed;
+    --accent2: #06b6d4;
+    --green: #10b981;
+    --red: #ef4444;
+    --yellow: #f59e0b;
+    --text: #e2e8f0;
+    --muted: #64748b;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    min-height: 100vh;
+  }
+
+  /* LOGIN */
+  #login-screen {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(ellipse at 50% 50%, #1a0a2e 0%, #0a0a0f 70%);
+  }
+
+  .login-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 48px;
+    width: 380px;
+    text-align: center;
+    box-shadow: 0 0 60px rgba(124,58,237,0.15);
+  }
+
+  .login-box .logo {
+    font-size: 36px;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 8px;
+  }
+
+  .login-box p {
+    color: var(--muted);
+    font-size: 14px;
+    margin-bottom: 32px;
+    font-family: 'Space Mono', monospace;
+  }
+
+  .input-group {
+    position: relative;
+    margin-bottom: 16px;
+  }
+
+  input[type="password"], input[type="text"], select {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 16px;
+    color: var(--text);
+    font-family: 'Space Mono', monospace;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  input:focus, select:focus { border-color: var(--accent); }
+
+  select option { background: var(--surface); }
+
+  .btn {
+    width: 100%;
+    padding: 12px;
+    background: linear-gradient(135deg, var(--accent), #5b21b6);
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.1s;
+  }
+
+  .btn:hover { opacity: 0.9; transform: translateY(-1px); }
+  .btn:active { transform: translateY(0); }
+
+  .btn-sm {
+    width: auto;
+    padding: 6px 14px;
+    font-size: 12px;
+    border-radius: 6px;
+  }
+
+  .btn-danger { background: linear-gradient(135deg, var(--red), #b91c1c); }
+  .btn-warning { background: linear-gradient(135deg, var(--yellow), #b45309); }
+  .btn-success { background: linear-gradient(135deg, var(--green), #047857); }
+  .btn-cyan { background: linear-gradient(135deg, var(--accent2), #0e7490); }
+
+  /* MAIN PANEL */
+  #panel { display: none; }
+
+  .topbar {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .topbar .logo {
+    font-size: 22px;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .topbar .logout-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    transition: all 0.2s;
+  }
+  .topbar .logout-btn:hover { border-color: var(--red); color: var(--red); }
+
+  .container { max-width: 1200px; margin: 0 auto; padding: 32px; }
+
+  /* STATS */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+  }
+  .stat-card.purple::before { background: var(--accent); }
+  .stat-card.cyan::before { background: var(--accent2); }
+  .stat-card.green::before { background: var(--green); }
+  .stat-card.red::before { background: var(--red); }
+
+  .stat-card .label {
+    font-size: 12px;
+    color: var(--muted);
+    font-family: 'Space Mono', monospace;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .stat-card .value {
+    font-size: 36px;
+    font-weight: 800;
+  }
+
+  /* TABS */
+  .tabs {
+    display: flex;
+    gap: 4px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 4px;
+    margin-bottom: 24px;
+    width: fit-content;
+  }
+
+  .tab {
+    padding: 8px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--muted);
+    transition: all 0.2s;
+    border: none;
+    background: none;
+    font-family: 'Syne', sans-serif;
+  }
+
+  .tab.active {
+    background: var(--accent);
+    color: white;
+  }
+
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* CREATE FORM */
+  .create-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px;
+    margin-bottom: 24px;
+  }
+
+  .create-card h2 {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr auto;
+    gap: 12px;
+    align-items: end;
+  }
+
+  .form-field label {
+    display: block;
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 6px;
+    font-family: 'Space Mono', monospace;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  /* TABLE */
+  .table-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .table-header {
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .table-header h2 { font-size: 16px; font-weight: 700; }
+
+  .search-input {
+    width: 240px;
+    padding: 8px 12px;
+    font-size: 13px;
+  }
+
+  table { width: 100%; border-collapse: collapse; }
+
+  th {
+    text-align: left;
+    padding: 12px 24px;
+    font-size: 11px;
+    color: var(--muted);
+    font-family: 'Space Mono', monospace;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-bottom: 1px solid var(--border);
+    background: rgba(255,255,255,0.02);
+  }
+
+  td {
+    padding: 14px 24px;
+    font-size: 13px;
+    border-bottom: 1px solid rgba(30,30,46,0.5);
+    vertical-align: middle;
+  }
+
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(255,255,255,0.02); }
+
+  .key-cell {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    color: var(--accent2);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .key-cell:hover { color: white; }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    font-family: 'Space Mono', monospace;
+  }
+
+  .badge.aktif { background: rgba(16,185,129,0.15); color: var(--green); border: 1px solid rgba(16,185,129,0.3); }
+  .badge.pasif { background: rgba(239,68,68,0.15); color: var(--red); border: 1px solid rgba(239,68,68,0.3); }
+  .badge.sureli { background: rgba(245,158,11,0.15); color: var(--yellow); border: 1px solid rgba(245,158,11,0.3); }
+  .badge.plugin { background: rgba(124,58,237,0.15); color: #a78bfa; border: 1px solid rgba(124,58,237,0.3); }
+
+  .actions { display: flex; gap: 6px; }
+
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 20px;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transform: translateY(100px);
+    opacity: 0;
+    transition: all 0.3s;
+    z-index: 999;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  }
+
+  .toast.show { transform: translateY(0); opacity: 1; }
+  .toast.success { border-color: var(--green); }
+  .toast.error { border-color: var(--red); }
+
+  .empty-state {
+    padding: 60px;
+    text-align: center;
+    color: var(--muted);
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+  }
+
+  .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+  .dot.green { background: var(--green); box-shadow: 0 0 6px var(--green); }
+  .dot.red { background: var(--red); }
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="logo">⬡ LisansPanel</div>
+    <p>Plugin Lisans Yönetim Sistemi</p>
+    <div class="input-group">
+      <input type="password" id="admin-key-input" placeholder="Admin şifresi" onkeydown="if(event.key==='Enter')login()">
+    </div>
+    <button class="btn" onclick="login()">Giriş Yap</button>
+  </div>
+</div>
+
+<!-- PANEL -->
+<div id="panel">
+  <div class="topbar">
+    <div class="logo">⬡ LisansPanel</div>
+    <button class="logout-btn" onclick="logout()">Çıkış</button>
+  </div>
+
+  <div class="container">
+    <!-- Stats -->
+    <div class="stats">
+      <div class="stat-card purple">
+        <div class="label">Toplam Lisans</div>
+        <div class="value" id="stat-toplam">0</div>
+      </div>
+      <div class="stat-card green">
+        <div class="label">Aktif</div>
+        <div class="value" id="stat-aktif">0</div>
+      </div>
+      <div class="stat-card red">
+        <div class="label">Pasif</div>
+        <div class="value" id="stat-pasif">0</div>
+      </div>
+      <div class="stat-card cyan">
+        <div class="label">Süresi Dolan</div>
+        <div class="value" id="stat-expired">0</div>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('lisanslar')">Aktif Lisanslar</button>
+      <button class="tab" onclick="switchTab('olustur')">Lisans Oluştur</button>
+    </div>
+
+    <!-- Lisanslar Tab -->
+    <div id="tab-lisanslar" class="tab-content active">
+      <div class="table-card">
+        <div class="table-header">
+          <h2>Tüm Lisanslar</h2>
+          <input type="text" class="search-input" placeholder="Ara..." oninput="filterTable(this.value)">
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Lisans Key</th>
+              <th>İsim</th>
+              <th>Plugin</th>
+              <th>Süre</th>
+              <th>Bitiş</th>
+              <th>Durum</th>
+              <th>İşlem</th>
+            </tr>
+          </thead>
+          <tbody id="lisans-table-body">
+            <tr><td colspan="7" class="empty-state">Yükleniyor...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Oluştur Tab -->
+    <div id="tab-olustur" class="tab-content">
+      <div class="create-card">
+        <h2>⊕ Yeni Lisans Oluştur</h2>
+        <div class="form-grid">
+          <div class="form-field">
+            <label>Müşteri İsmi</label>
+            <input type="text" id="new-isim" placeholder="örn: Ahmet_Sunucusu">
+          </div>
+          <div class="form-field">
+            <label>Plugin</label>
+            <select id="new-plugin">
+              <option value="ChatPlugin">ChatPlugin</option>
+              <option value="KufurEngel">KufurEngel</option>
+              <option value="GunlukOdul">GunlukOdul</option>
+              <option value="hepsi">Hepsi</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label>Süre</label>
+            <select id="new-sure">
+              <option value="1hafta">1 Hafta</option>
+              <option value="1ay">1 Ay</option>
+              <option value="3ay">3 Ay</option>
+              <option value="6ay">6 Ay</option>
+              <option value="1yil">1 Yıl</option>
+              <option value="sinirsiz">Sınırsız ♾</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label>&nbsp;</label>
+            <button class="btn" style="width:160px" onclick="olusturLisans()">Oluştur</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Son oluşturulan -->
+      <div id="created-key-box" style="display:none" class="create-card">
+        <h2>✓ Lisans Oluşturuldu</h2>
+        <p style="color:var(--muted);font-size:13px;margin-bottom:16px;font-family:'Space Mono',monospace">
+          Aşağıdaki key'i müşteriye gönder:
+        </p>
+        <div style="display:flex;align-items:center;gap:12px">
+          <div id="created-key-display" style="font-family:'Space Mono',monospace;font-size:20px;color:var(--accent2);background:var(--bg);padding:14px 24px;border-radius:8px;border:1px solid var(--border);flex:1;letter-spacing:0.1em"></div>
+          <button class="btn btn-cyan" style="width:120px" onclick="copyKey()">Kopyala</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+let ADMIN_KEY = '';
+let allLisanslar = [];
+
+function login() {
+  const key = document.getElementById('admin-key-input').value;
+  if (!key) return;
+  ADMIN_KEY = key;
+  fetchLisanslar().then(ok => {
+    if (ok) {
+      document.getElementById('login-screen').style.display = 'none';
+      document.getElementById('panel').style.display = 'block';
+    } else {
+      toast('Hatalı şifre!', 'error');
+      ADMIN_KEY = '';
+    }
+  });
+}
+
+function logout() {
+  ADMIN_KEY = '';
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('panel').style.display = 'none';
+  document.getElementById('admin-key-input').value = '';
+}
+
+async function fetchLisanslar() {
+  try {
+    const res = await fetch('/api/lisanslar', { headers: { 'x-admin-key': ADMIN_KEY } });
+    if (!res.ok) return false;
+    allLisanslar = await res.json();
+    renderTable(allLisanslar);
+    updateStats(allLisanslar);
+    return true;
+  } catch { return false; }
+}
+
+function updateStats(data) {
+  const now = Date.now();
+  document.getElementById('stat-toplam').textContent = data.length;
+  document.getElementById('stat-aktif').textContent = data.filter(l => l.aktif && (!l.expiry || l.expiry > now)).length;
+  document.getElementById('stat-pasif').textContent = data.filter(l => !l.aktif).length;
+  document.getElementById('stat-expired').textContent = data.filter(l => l.expiry && l.expiry < now).length;
+}
+
+function formatDate(ts) {
+  if (!ts) return '<span style="color:var(--green)">♾ Sınırsız</span>';
+  const d = new Date(ts);
+  const now = Date.now();
+  if (ts < now) return `<span style="color:var(--red)">${d.toLocaleDateString('tr-TR')} (Doldu)</span>`;
+  return d.toLocaleDateString('tr-TR');
+}
+
+function formatSure(sure) {
+  const map = { '1hafta':'1 Hafta','1ay':'1 Ay','3ay':'3 Ay','6ay':'6 Ay','1yil':'1 Yıl','sinirsiz':'Sınırsız' };
+  return map[sure] || sure;
+}
+
+function renderTable(data) {
+  const tbody = document.getElementById('lisans-table-body');
+  if (!data.length) {
+    tbody.innerHTML = '<tr><td colspan="7" class="empty-state">Henüz lisans yok</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = data.map(l => {
+    const expired = l.expiry && Date.now() > l.expiry;
+    const durum = !l.aktif ? `<span class="badge pasif"><span class="dot red"></span>Pasif</span>`
+                : expired ? `<span class="badge sureli">Doldu</span>`
+                : `<span class="badge aktif"><span class="dot green"></span>Aktif</span>`;
+    return `
+    <tr>
+      <td><div class="key-cell" onclick="copyText('${l.key}')" title="Kopyalamak için tıkla">
+        ${l.key} <span style="font-size:10px;color:var(--muted)">⎘</span>
+      </div></td>
+      <td>${l.isim}</td>
+      <td><span class="badge plugin">${l.plugin}</span></td>
+      <td>${formatSure(l.sure)}</td>
+      <td>${formatDate(l.expiry)}</td>
+      <td>${durum}</td>
+      <td><div class="actions">
+        <button class="btn btn-sm btn-warning" onclick="toggleLisans('${l.key}')">${l.aktif ? 'Durdur' : 'Aktifleştir'}</button>
+        <button class="btn btn-sm btn-danger" onclick="silLisans('${l.key}')">Sil</button>
+      </div></td>
+    </tr>`;
+  }).join('');
+}
+
+function filterTable(q) {
+  const filtered = allLisanslar.filter(l =>
+    l.key.toLowerCase().includes(q.toLowerCase()) ||
+    l.isim.toLowerCase().includes(q.toLowerCase()) ||
+    l.plugin.toLowerCase().includes(q.toLowerCase())
+  );
+  renderTable(filtered);
+}
+
+async function olusturLisans() {
+  const isim = document.getElementById('new-isim').value.trim();
+  const plugin = document.getElementById('new-plugin').value;
+  const sure = document.getElementById('new-sure').value;
+  if (!isim) return toast('Müşteri ismi gir!', 'error');
+
+  const res = await fetch('/api/olustur', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'x-admin-key': ADMIN_KEY },
+    body: JSON.stringify({ isim, plugin, sure })
+  });
+  const data = await res.json();
+  if (data.success) {
+    document.getElementById('created-key-box').style.display = 'block';
+    document.getElementById('created-key-display').textContent = data.key;
+    document.getElementById('new-isim').value = '';
+    toast('Lisans oluşturuldu!', 'success');
+    fetchLisanslar();
+  } else {
+    toast('Hata: ' + data.error, 'error');
+  }
+}
+
+function copyKey() {
+  const key = document.getElementById('created-key-display').textContent;
+  copyText(key);
+}
+
+function copyText(text) {
+  navigator.clipboard.writeText(text);
+  toast('Key kopyalandı!', 'success');
+}
+
+async function toggleLisans(key) {
+  await fetch(`/api/lisans?key=${key}`, {
+    method: 'PATCH',
+    headers: { 'x-admin-key': ADMIN_KEY }
+  });
+  toast('Lisans güncellendi', 'success');
+  fetchLisanslar();
+}
+
+async function silLisans(key) {
+  if (!confirm('Bu lisansı silmek istediğinden emin misin?')) return;
+  await fetch(`/api/lisans?key=${key}`, {
+    method: 'DELETE',
+    headers: { 'x-admin-key': ADMIN_KEY }
+  });
+  toast('Lisans silindi', 'success');
+  fetchLisanslar();
+}
+
+function switchTab(tab) {
+  document.querySelectorAll('.tab').forEach((t, i) => t.classList.toggle('active', ['lisanslar','olustur'][i] === tab));
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  document.getElementById('tab-' + tab).classList.add('active');
+  if (tab === 'lisanslar') fetchLisanslar();
+}
+
+function toast(msg, type = 'success') {
+  const el = document.getElementById('toast');
+  el.textContent = (type === 'success' ? '✓ ' : '✗ ') + msg;
+  el.className = `toast ${type} show`;
+  setTimeout(() => el.classList.remove('show'), 3000);
+}
+
+// Her 30 saniyede bir güncelle
+setInterval(() => { if (ADMIN_KEY) fetchLisanslar(); }, 30000);
+</script>
+</body>
+</html>

@@ -1,17 +1,19 @@
-// Upstash Redis veritabanı yardımcısı
 const KV_URL = process.env.KV_REST_API_URL;
 const KV_TOKEN = process.env.KV_REST_API_TOKEN;
 
 async function kvGet(key) {
-    const res = await fetch(`${KV_URL}/get/${key}`, {
+    const res = await fetch(`${KV_URL}/get/${encodeURIComponent(key)}`, {
         headers: { Authorization: `Bearer ${KV_TOKEN}` }
     });
     const data = await res.json();
-    return data.result ? JSON.parse(data.result) : {};
+    if (!data.result) return {};
+    // Upstash bazen string, bazen obje döner
+    if (typeof data.result === 'string') return JSON.parse(data.result);
+    return data.result;
 }
 
 async function kvSet(key, value) {
-    await fetch(`${KV_URL}/set/${key}`, {
+    const res = await fetch(`${KV_URL}/set/${encodeURIComponent(key)}`, {
         method: 'POST',
         headers: {
             Authorization: `Bearer ${KV_TOKEN}`,
@@ -19,6 +21,7 @@ async function kvSet(key, value) {
         },
         body: JSON.stringify(JSON.stringify(value))
     });
+    return res.ok;
 }
 
 async function loadDB() {
@@ -26,12 +29,12 @@ async function loadDB() {
 }
 
 async function saveDB(data) {
-    await kvSet('lisanslar', data);
+    return await kvSet('lisanslar', data);
 }
 
 function generateKey() {
-    const part = () => Math.random().toString(36).substring(2, 6).toUpperCase() +
-                       Math.random().toString(36).substring(2, 6).toUpperCase();
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    const part = () => Array.from({length: 8}, () => chars[Math.floor(Math.random() * chars.length)]).join('');
     return `${part()}-${part()}-${part()}-${part()}`;
 }
 

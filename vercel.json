@@ -1,11 +1,10 @@
 {
   "version": 2,
-  "builds": [
-    { "src": "api/*.js", "use": "@vercel/node" },
-    { "src": "public/index.html", "use": "@vercel/static" }
-  ],
   "routes": [
-    { "src": "/api/(.*)", "dest": "/api/$1" },
+    { "src": "/api/lisanslar", "dest": "/api/lisanslar.js" },
+    { "src": "/api/olustur", "dest": "/api/olustur.js" },
+    { "src": "/api/lisans", "dest": "/api/lisans.js" },
+    { "src": "/api/dogrula", "dest": "/api/dogrula.js" },
     { "src": "/(.*)", "dest": "/public/index.html" }
   ]
 }

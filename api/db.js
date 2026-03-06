@@ -1,24 +1,32 @@
-// JSONBin.io veritabanı yardımcısı
-const JSONBIN_URL = 'https://api.jsonbin.io/v3/b/' + process.env.JSONBIN_BIN_ID;
-const JSONBIN_KEY = process.env.JSONBIN_API_KEY;
+// Upstash Redis veritabanı yardımcısı
+const KV_URL = process.env.KV_REST_API_URL;
+const KV_TOKEN = process.env.KV_REST_API_TOKEN;
 
-async function loadDB() {
-    const res = await fetch(JSONBIN_URL + '/latest', {
-        headers: { 'X-Master-Key': JSONBIN_KEY }
+async function kvGet(key) {
+    const res = await fetch(`${KV_URL}/get/${key}`, {
+        headers: { Authorization: `Bearer ${KV_TOKEN}` }
     });
     const data = await res.json();
-    return data.record || {};
+    return data.result ? JSON.parse(data.result) : {};
+}
+
+async function kvSet(key, value) {
+    await fetch(`${KV_URL}/set/${key}`, {
+        method: 'POST',
+        headers: {
+            Authorization: `Bearer ${KV_TOKEN}`,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(JSON.stringify(value))
+    });
+}
+
+async function loadDB() {
+    return await kvGet('lisanslar');
 }
 
 async function saveDB(data) {
-    await fetch(JSONBIN_URL, {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-Master-Key': JSONBIN_KEY
-        },
-        body: JSON.stringify(data)
-    });
+    await kvSet('lisanslar', data);
 }
 
 function generateKey() {
